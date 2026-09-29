@@ -2065,6 +2065,8 @@
       .flower-copy p { margin: 0 auto 24px; max-width: 410px; color: #564953; line-height: 1.65; }
       .flower-replay { border: 0; background: var(--red); color: #fff; padding: 14px 20px; font-size: .72rem; font-weight: 700; letter-spacing: .1em; box-shadow: 5px 5px #19131a; transition: .2s; }
       .flower-replay:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px #19131a; }
+      .flower-reminder { display: inline-flex; align-items: center; justify-content: center; margin: 13px auto 0; border: 0; border-bottom: 1px solid #9b0f1e88; padding: 7px 3px; background: transparent; color: var(--deep); font-size: .68rem; font-weight: 700; letter-spacing: .12em; transition: .2s; }
+      .flower-reminder:hover { color: var(--red); transform: translateY(-2px); }
       .flower-garden { position: absolute; inset: 0; pointer-events: none; }
       .flower { position: absolute; bottom: -28px; left: var(--x); width: 6px; height: var(--h); transform-origin: bottom center; animation: flowerSway 3.8s ease-in-out calc(var(--d) + 1.2s) infinite alternate; }
       .flower:nth-child(even) { animation-duration: 4.6s; animation-direction: alternate-reverse; }
@@ -2078,6 +2080,16 @@
       @keyframes flowerBloom { to { transform: rotate(var(--r)) scale(1); } }
       @keyframes leafOpen { to { opacity: 1; } }
       @keyframes flowerSway { from { transform: rotate(-2.5deg); } to { transform: rotate(3deg); } }
+      .reminder-page { position: fixed; z-index: 140; inset: 0; display: grid; place-items: center; overflow: hidden; padding: 24px; background: radial-gradient(circle at 18% 18%, #e21b2d45, transparent 24%), radial-gradient(circle at 84% 78%, #2563eb36, transparent 26%), repeating-radial-gradient(circle at 50% 50%, transparent 0 48px, #ffffff0b 49px 50px, transparent 51px 90px), linear-gradient(135deg, #08090d, #18121c 58%, #07101f); opacity: 0; visibility: hidden; transform: scale(1.03); transition: opacity .5s ease, transform .5s ease, visibility .5s; }
+      .reminder-page.open { opacity: 1; visibility: visible; transform: none; }
+      .verse-card { position: relative; width: min(100%, 650px); padding: clamp(32px, 7vw, 68px); overflow: hidden; border: 1px solid #ffffff42; border-radius: 30px; background: linear-gradient(135deg, #ffffff1c, #ffffff09); box-shadow: 0 28px 75px #0000008c, inset 0 1px #fff3; backdrop-filter: blur(18px); text-align: center; }
+      .verse-card::before { content: "\201C"; position: absolute; top: -35px; left: 23px; color: #f39aaf38; font: 15rem/1 "Playfair Display"; }
+      .verse-card > * { position: relative; z-index: 1; }
+      .verse-card .eyebrow { margin: 0 0 20px; }
+      .verse-card blockquote { margin: 0; color: #fff8f5; font: 600 clamp(1.7rem, 4.5vw, 3.05rem)/1.28 "Playfair Display"; }
+      .verse-card cite { display: block; margin-top: 25px; color: var(--pink); font: 700 .78rem "DM Sans"; letter-spacing: .18em; font-style: normal; }
+      .verse-back { margin-top: 31px; border: 1px solid #ffffff4d; border-radius: 99px; padding: 11px 17px; background: #ffffff12; color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: .09em; transition: .2s; }
+      .verse-back:hover { background: var(--red); border-color: var(--red); transform: translateY(-2px); }
       @media (max-width: 560px) { .flower-page { padding: 25px 18px 105px; } .flower-copy { padding: 24px 17px; border-radius: 22px; } .flower-copy h2 { font-size: clamp(3.8rem, 18vw, 5.8rem); } .flower-copy p { font-size: .9rem; } .flower:nth-child(n + 11) { display: none; } }
       @keyframes finalWebDrift {
         to { transform: rotate(24deg) scale(1.1); }
@@ -2831,7 +2843,16 @@
         <h2>FLOWER<br />FOR YOU</h2>
         <p>Semoga hari-harimu selalu tumbuh seindah bunga-bunga ini. Thank you for choosing our little universe.</p>
         <button class="flower-replay" id="replayStory" type="button">RELIVE OUR STORY &#8635;</button>
+        <button class="flower-reminder" id="openReminder" type="button">REMINDER FOR YOU &#10022;</button>
       </div>
+    </section>
+    <section class="reminder-page" id="reminderPage" aria-hidden="true" aria-label="A reminder for you">
+      <article class="verse-card">
+        <p class="eyebrow">A LITTLE REMINDER FOR YOUR HEART</p>
+        <blockquote>“Aku mengucap syukur kepada Allahku, setiap kali aku mengingat engkau dalam doaku.”</blockquote>
+        <cite>FILEMON 1:4</cite>
+        <button class="verse-back" id="backToFlowers" type="button">BACK TO MY FLOWERS</button>
+      </article>
     </section>
     <div class="sense" id="sense">
       <b>SPIDER SENSE</b>
@@ -3837,6 +3858,7 @@
       const closeFinalNote = () => finalOverlay.classList.remove("show");
       const flowerPage = $("#flowerPage");
       const flowerGarden = $("#flowerGarden");
+      const reminderPage = $("#reminderPage");
       const flowers = [
         ["2%", "145px", "#f7a7bd", ".32s"], ["8%", "240px", "#f39aaf", ".05s"],
         ["14%", "310px", "#e21b2d", ".2s"], ["20%", "185px", "#ff9ab1", ".52s"],
@@ -3868,6 +3890,17 @@
         flowerPage.classList.remove("open");
         flowerPage.setAttribute("aria-hidden", "true");
         $("#home").scrollIntoView({ behavior: "smooth" });
+      };
+      $("#openReminder").onclick = () => {
+        flowerPage.classList.remove("open");
+        flowerPage.setAttribute("aria-hidden", "true");
+        reminderPage.classList.add("open");
+        reminderPage.setAttribute("aria-hidden", "false");
+      };
+      $("#backToFlowers").onclick = () => {
+        reminderPage.classList.remove("open");
+        reminderPage.setAttribute("aria-hidden", "true");
+        openFlowerPage();
       };
       finalOverlay.onclick = (e) => {
         if (e.target === finalOverlay) closeFinalNote();
